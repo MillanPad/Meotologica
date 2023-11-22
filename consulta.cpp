@@ -3,7 +3,7 @@
 #include <string>
 #include <limits> 
 
-//Funcion para obtener la energia producida por una tecnología para un rango temporal
+//Funcion para obtener la energia producida por una tecnologia para un rango temporal
 void consultarEnergiaProducida(sqlite3 *db, const std::string &tecnologia, const std::string &inicio, const std::string &fin) {
     sqlite3_stmt *stmt;
 
@@ -31,7 +31,7 @@ void consultarEnergiaProducida(sqlite3 *db, const std::string &tecnologia, const
 
 // Funcion para obtener la energia demandada para un rango temporal
 void consultarEnergiaDemandada(sqlite3 *db, const std::string &inicio, const std::string &fin) {
-    // Puedes utilizar la función consultarEnergiaProducida con "load" como tecnología
+   
     consultarEnergiaProducida(db, "load", inicio, fin);
 }
 
