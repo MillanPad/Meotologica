@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <string>
+#include <limits> 
 
 //Funcion para obtener la energia producida por una tecnología para un rango temporal
 void consultarEnergiaProducida(sqlite3 *db, const std::string &tecnologia, const std::string &inicio, const std::string &fin) {
@@ -99,7 +100,8 @@ int main() {
         char opcion;
         mostrarMenu();
         std::cin >> opcion;
-    
+        // Limpiar el bufer de entrada despues de leer la opción
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         switch (opcion) {
             case 'a':
                 consultarEnergiaProducida(db, "solar_generation", inicio, fin);
