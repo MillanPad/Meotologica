@@ -2,7 +2,7 @@
 #include <sqlite3.h>
 #include <string>
 
-//Funcion para obtener la energía producida por una tecnología para un rango temporal
+//Funcion para obtener la energia producida por una tecnologÃ­a para un rango temporal
 void consultarEnergiaProducida(sqlite3 *db, const std::string &tecnologia, const std::string &inicio, const std::string &fin) {
     sqlite3_stmt *stmt;
 
@@ -28,13 +28,13 @@ void consultarEnergiaProducida(sqlite3 *db, const std::string &tecnologia, const
     sqlite3_finalize(stmt);
 }
 
-// Funcion para obtener la energía demandada para un rango temporal
+// Funcion para obtener la energia demandada para un rango temporal
 void consultarEnergiaDemandada(sqlite3 *db, const std::string &inicio, const std::string &fin) {
-    // Puedes utilizar la función consultarEnergiaProducida con "load" como tecnología
+    // Puedes utilizar la funciÃ³n consultarEnergiaProducida con "load" como tecnologÃ­a
     consultarEnergiaProducida(db, "load", inicio, fin);
 }
 
-// Funcion para calcular el déficit de energía renovable medio para un periodo de tiempo
+// Funcion para calcular el deficit de energia renovable medio para un periodo de tiempo
 double calcularDeficitMedio(sqlite3 *db, const std::string &inicio, const std::string &fin) {
     sqlite3_stmt *stmt;
 
@@ -61,58 +61,67 @@ double calcularDeficitMedio(sqlite3 *db, const std::string &inicio, const std::s
     sqlite3_finalize(stmt);
 
     double deficitTotal = demandaTotal - generacionRenovableTotal;
-    int horas = sqlite3_changes(db); // Obtener el número total de horas (filas)
+    int horas = sqlite3_changes(db); // Obtener el nÃºmero total de horas (filas)
     double deficitMedio = deficitTotal / horas;
 
     return deficitMedio;
 }
 
-// Función para mostrar el menú y procesar la selección del usuario
+// Funcion para mostrar el menÃº y procesar la selecciÃ³n del usuario
 void mostrarMenu() {
     std::cout << "Seleccione la consulta:" << std::endl;
-    std::cout << "a. Energía producida por una tecnología para un rango temporal" << std::endl;
-    std::cout << "b. Energía demandada para un rango temporal" << std::endl;
-    std::cout << "c. Cálculo de déficit de energía renovable media para un periodo de tiempo" << std::endl;
-    std::cout << "Seleccione (a/b/c): ";
+    std::cout << "a. Energia producida por una tecnologia para un rango temporal" << std::endl;
+    std::cout << "b. Energia demandada para un rango temporal" << std::endl;
+    std::cout << "c. CÃ¡lculo de dÃ©ficit de energÃ­a renovable media para un periodo de tiempo" << std::endl;
+    std::cout << "d. Salir del Programa" << std::endl;
+    std::cout << "Seleccione (a/b/c/d): ";
 }
 
 int main() {
     sqlite3 *db;
-
+    bool menu = true;
     // Abrir la base de datos
     int rc = sqlite3_open("datos.db", &db);
     if (rc != SQLITE_OK) {
         std::cerr << "Error al abrir la base de datos: " << sqlite3_errmsg(db) << std::endl;
         return rc;
     }
+    
+    while(menu){
 
-    // Solicitar fechas al usuario
-    std::string inicio, fin;
-    std::cout << "Introduce la fecha de inicio (formato YYYY-MM-DD HH:MM:SS): ";
-    std::getline(std::cin, inicio);
-    std::cout << "Introduce la fecha de fin (formato YYYY-MM-DD HH:MM:SS): ";
-    std::getline(std::cin, fin);
-
-    char opcion;
-    mostrarMenu();
-    std::cin >> opcion;
-
-    switch (opcion) {
-        case 'a':
-            consultarEnergiaProducida(db, "solar_generation", inicio, fin);
-            break;
-        case 'b':
-            consultarEnergiaDemandada(db, inicio, fin);
-            break;
-        case 'c':
-            {
-                double deficitMedio = calcularDeficitMedio(db, inicio, fin);
-                std::cout << "Déficit medio de energía renovable: " << deficitMedio << " MW por hora" << std::endl;
-            }
-            break;
-        default:
-            std::cout << "Opción no válida" << std::endl;
-            break;
+        // Solicitar fechas al usuario
+        std::string inicio, fin;
+        std::cout << "Introduce la fecha de inicio (formato YYYY-MM-DD HH:MM:SS): ";
+        std::getline(std::cin, inicio);
+        std::cout << "Introduce la fecha de fin (formato YYYY-MM-DD HH:MM:SS): ";
+        std::getline(std::cin, fin);
+    
+        char opcion;
+        mostrarMenu();
+        std::cin >> opcion;
+    
+        switch (opcion) {
+            case 'a':
+                consultarEnergiaProducida(db, "solar_generation", inicio, fin);
+                break;
+            case 'b':
+                consultarEnergiaDemandada(db, inicio, fin);
+                break;
+            case 'c':
+                {
+                    double deficitMedio = calcularDeficitMedio(db, inicio, fin);
+                    std::cout << "DÃ©ficit medio de energÃ­a renovable: " << deficitMedio << " MW por hora" << std::endl;
+                }
+                break;
+            case 'd':
+                {
+                    menu=false;
+                }
+                break;
+            default:
+                std::cout << "OpciÃ³n no vÃ¡lida" << std::endl;
+                break;
+        }
     }
 
     // Cerrar la base de datos
