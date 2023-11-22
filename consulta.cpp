@@ -62,19 +62,20 @@ double calcularDeficitMedio(sqlite3 *db, const std::string &inicio, const std::s
     sqlite3_finalize(stmt);
 
     double deficitTotal = demandaTotal - generacionRenovableTotal;
-    int horas = sqlite3_changes(db); // Obtener el número total de horas (filas)
+    int horas = sqlite3_changes(db); // Obtener el numero total de horas (filas)
     double deficitMedio = deficitTotal / horas;
 
     return deficitMedio;
 }
 
-// Funcion para mostrar el menú y procesar la selección del usuario
+// Funcion para mostrar el menu y procesar la seleccion del usuario
 void mostrarMenu() {
     std::cout << "Seleccione la consulta:" << std::endl;
     std::cout << "a. Energia producida por una tecnologia para un rango temporal" << std::endl;
     std::cout << "b. Energia demandada para un rango temporal" << std::endl;
     std::cout << "c. Cálculo de déficit de energía renovable media para un periodo de tiempo" << std::endl;
-    std::cout << "d. Salir del Programa" << std::endl;
+    std::cout << "d. Cambiar fechas" << std::endl;
+    std::cout << "e. Salir del Programa" << std::endl;
     std::cout << "Seleccione (a/b/c/d): ";
 }
 
@@ -87,20 +88,23 @@ int main() {
         std::cerr << "Error al abrir la base de datos: " << sqlite3_errmsg(db) << std::endl;
         return rc;
     }
-    
-    while(menu){
+    std::string inicio, fin;  
 
-        // Solicitar fechas al usuario
-        std::string inicio, fin;
-        std::cout << "Introduce la fecha de inicio (formato YYYY-MM-DD HH:MM:SS): ";
-        std::getline(std::cin, inicio);
-        std::cout << "Introduce la fecha de fin (formato YYYY-MM-DD HH:MM:SS): ";
-        std::getline(std::cin, fin);
+    while (menu) {
+        // Solo pedir fechas si no se seleccionó la opción 'd' en la iteración anterior
+        if (inicio.empty() && fin.empty()) {
+            // Solicitar fechas al usuario
+            std::cout << "Introduce la fecha de inicio (formato YYYY-MM-DD HH:MM:SS): " << std::endl;
+            std::getline(std::cin, inicio);
+            std::cout << "Introduce la fecha de fin (formato YYYY-MM-DD HH:MM:SS): " << std::endl;
+            std::getline(std::cin, fin);
+        }
+    
     
         char opcion;
         mostrarMenu();
         std::cin >> opcion;
-        // Limpiar el bufer de entrada despues de leer la opción
+        // Limpiar el bufer de entrada despues de leer la opcion
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         switch (opcion) {
             case 'a':
@@ -110,15 +114,15 @@ int main() {
                 consultarEnergiaDemandada(db, inicio, fin);
                 break;
             case 'c':
-                {
                     double deficitMedio = calcularDeficitMedio(db, inicio, fin);
                     std::cout << "Déficit medio de energía renovable: " << deficitMedio << " MW por hora" << std::endl;
-                }
                 break;
             case 'd':
-                {
+                    inicio.clear();
+                    fin.clear();
+                break;
+            case 'e':
                     menu=false;
-                }
                 break;
             default:
                 std::cout << "Opción no válida" << std::endl;
