@@ -25,12 +25,12 @@ cursor.execute('''
 
 # Abrir el archivo de texto y leer los datos
 with open(txt_file, 'r') as file:
-    # Ignorar la primera línea que contiene encabezados
+    # Ignorar la primera linea que contiene encabezados
     next(file)
     
     # Iterar sobre las lineas del archivo e insertar en la base de datos
     for line in file:
-        # Reemplazar las comas por puntos y dividir la línea en partes
+        # Reemplazar las comas por puntos y dividir la linea en partes
         parts = line.strip().replace(',', '.').split(';')
         
         # Convertir el primer elemento a un objeto de fecha y hora
