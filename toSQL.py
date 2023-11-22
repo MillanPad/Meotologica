@@ -7,7 +7,7 @@ txt_file = 'datos'
 # Nombre de la base de datos SQLite
 database_file = 'datos.db'
 
-# Crear una conexión a la base de datos SQLite
+# Crear una conexion a la base de datos SQLite
 conn = sqlite3.connect(database_file)
 
 # Crear un cursor para ejecutar consultas
@@ -28,7 +28,7 @@ with open(txt_file, 'r') as file:
     # Ignorar la primera línea que contiene encabezados
     next(file)
     
-    # Iterar sobre las líneas del archivo e insertar en la base de datos
+    # Iterar sobre las lineas del archivo e insertar en la base de datos
     for line in file:
         # Reemplazar las comas por puntos y dividir la línea en partes
         parts = line.strip().replace(',', '.').split(';')
@@ -36,7 +36,7 @@ with open(txt_file, 'r') as file:
         # Convertir el primer elemento a un objeto de fecha y hora
         timestamp = datetime.strptime(parts[0], '%Y-%m-%dT%H:%M:%SZ')
         
-        # Convertir las otras partes a números en coma flotante (si existen)
+        # Convertir las otras partes a numeros en coma flotante (si existen)
         load = float(parts[1]) if parts[1] else None
         solar_generation = float(parts[2]) if parts[2] else None
         wind_generation = float(parts[3]) if parts[3] else None
@@ -47,7 +47,7 @@ with open(txt_file, 'r') as file:
             VALUES (?, ?, ?, ?)
         ''', (timestamp, load, solar_generation, wind_generation))
 
-# Confirmar los cambios y cerrar la conexión
+# Confirmar los cambios y cerrar la conexion
 conn.commit()
 conn.close()
 
